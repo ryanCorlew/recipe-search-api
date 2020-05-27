@@ -25,13 +25,23 @@ button:focus {
   padding: 30px;
   color: white;
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.go-home {
+  color: white;
 }
 
 .App-title {
   font-size: 1.5em;
 }
 
-.recipe_buttons {
+.App-subtitle {
+  font-size: 1em;
+}
+
+.recipe__buttons {
   border: solid 2px #e74c3c;
   background: transparent;
   padding: 0.4rem 0.6rem;
@@ -151,7 +161,7 @@ input:-webkit-autofill {
   border: solid 2px #e74c3c;
   background: transparent;
   padding: 0.2rem 0.9rem;
-  margin: 0 0.2rem;
+  margin-bottom: 1rem;
   border-radius: 1px;
   font-size: 1rem;
   text-transform: uppercase;

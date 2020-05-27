@@ -15,19 +15,30 @@ class App extends Component {
     const recipeName = e.target.elements.recipeName.value;
     e.preventDefault();
     const api_call = await fetch(
-      `https://api.spoonacular.com/recipes/search?query=${recipeName}&number=100&apiKey=${API_KEY}`
+      `https://api.spoonacular.com/recipes/search?query=${recipeName}&number=10&apiKey=${API_KEY}`
     );
 
     const data = await api_call.json();
     this.setState({ recipes: data.results });
-    console.log(this.state.recipes);
   };
+
+  // componentDidMount = () => {
+  //   const recipes = JSON.parse(localStorage.getItem("recipes"));
+
+  //   this.setState({ recipes: recipes });
+  // };
+
+  // componentDidUpdate = () => {
+  //   const recipes = JSON.stringify(this.state.recipes);
+  //   localStorage.setItem("recipes", recipes);
+  // };
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Recipe Search</h1>
+          <h2 className="App-subtitle">With the Spoonacular API</h2>
         </header>
         <Form getRecipe={this.getRecipe} />
         <Recipes recipes={this.state.recipes} />
