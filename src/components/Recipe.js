@@ -1,29 +1,35 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 
 const API_KEY = "2c91f4cd2f4849ad8c7712071af5e464";
 
 class Recipe extends React.Component {
   state = {
-    activeRecipe: [],
+    activeRecipe: null,
     instructions: [],
+    loading: false,
   };
 
   componentDidMount = async () => {
     const title = this.props.location.state.recipe;
+    this.setState({ loading: true });
     const req = await fetch(
       `https://api.spoonacular.com/recipes/search?query=${title}&number=5&apiKey=${API_KEY}`
     );
 
     const res = await req.json();
-    this.setState({ activeRecipe: res.results[0] });
-
-    const instructionsReq = await fetch(
-      `https://api.spoonacular.com/recipes/${res.results[0].id}/analyzedInstructions?apiKey=${API_KEY}`
-    );
-    const instructionsRes = await instructionsReq.json();
-    this.setState({ instructions: instructionsRes[0].steps });
-    console.log(this.state.instructions);
+    if (res && res.results[0]) {
+      this.setState({ activeRecipe: res.results[0], loading: false });
+      const instructionsReq = await fetch(
+        `https://api.spoonacular.com/recipes/${res.results[0].id}/analyzedInstructions?apiKey=${API_KEY}`
+      );
+      const instructionsRes = await instructionsReq.json();
+      if (instructionsRes && instructionsRes[0] && instructionsRes[0].steps) {
+        this.setState({ instructions: instructionsRes[0].steps });
+      }
+    } else {
+      this.setState({ loading: false });
+    }
   };
 
   render() {
@@ -43,7 +49,7 @@ class Recipe extends React.Component {
       <div>
         <header className="App-header">
           <div className="go-home">
-            <Link to="/">Go Home</Link>
+            <Link to="/recipe-search-api">Go Home</Link>
           </div>
         </header>
         <div className="container">
@@ -62,7 +68,7 @@ class Recipe extends React.Component {
             </div>
           </div>
           <button className="active-recipe__button">
-            <Link to="/">Go Home</Link>
+            <Link to="/recipe-search-api">Go Home</Link>
           </button>
         </div>
       </div>
@@ -75,10 +81,16 @@ class Recipe extends React.Component {
           marginTop: "5rem",
         }}
       >
-        <h1>Recipe Not Found</h1>
-        <button className="active-recipe__button">
-          <Link to="/">Go Home</Link>
-        </button>
+        {this.state.loading ? (
+          <h1>Loading...</h1>
+        ) : (
+          <Fragment>
+            <h1>Recipe Not Found</h1>
+            <button className="active-recipe__button">
+              <Link to="/">Go Home</Link>
+            </button>
+          </Fragment>
+        )}
       </div>
     );
   }
